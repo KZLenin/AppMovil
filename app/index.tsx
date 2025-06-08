@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import SocialLoginButtons from "@/components/SocialLoginButtons";
 
 type Props = {};
 
@@ -18,28 +19,11 @@ const WelcomeScreen = (props: Props) => {
         <View style={styles.wrapper}>
           <Animated.Text style={styles.title} entering={FadeInRight.delay(300).duration(300).springify()}>Intex</Animated.Text>
           <Animated.Text style={styles.description} entering={FadeInRight.delay(500).duration(300).springify()}>Lorem ipsum</Animated.Text>
-          <View style={styles.socialLoginWrapper}>
-            <Animated.View entering={FadeInDown.delay(300).duration(500)}>
-            <Link href={"/signin"} asChild>
-              <TouchableOpacity style={styles.button}>
-                <Ionicons name="mail-outline" size={20} color={Colors.black}/>
-                <Text style={styles.btnTxt}>Continuar con correo</Text>
-              </TouchableOpacity>
-            </Link>
-            </Animated.View>
-          </View>
-          <View style={styles.socialLoginWrapper}>
-            <Animated.View entering={FadeInDown.delay(700).duration(500)}>
-            <Link href={"/signin"} asChild>
-              <TouchableOpacity style={styles.button}>
-                <Ionicons name="logo-google" size={20} color={Colors.black}/>
-                <Text style={styles.btnTxt}>Continuar con Google</Text>
-              </TouchableOpacity>
-            </Link>
-            </Animated.View>
-          </View>
+          
+          <SocialLoginButtons/>
+
           <Animated.View entering={FadeInDown.delay(1100).duration(500)}>
-          <Text style={styles.loginTxt}>¿Aún no tienes cuenta? {" "}
+          <Text style={styles.loginTxt}>¿Aún no tienes una cuenta? {" "}
             <Link href={"/signup"} asChild>
               <TouchableOpacity>
                 <Text style={styles.loginTxtSpan}>Crear cuenta</Text>
