@@ -1,14 +1,63 @@
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Link, Stack, router } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
 import InputFields from '@/components/InputFields'
-
+import { useForm } from 'react-hook-form'
+import Toast from 'react-native-toast-message'
+import axios from 'axios'
+import Constants from 'expo-constants'
 
 type Props = {}
 
+type FormData = {
+  nombre: string
+  apellido: string
+  direccion: string
+  celular: string
+  email: string
+  password: string
+}
+
 const SignUpScreen = (props: Props) => {
+  const {control,handleSubmit,formState: { errors },} = useForm<FormData>()
+  const BACKEND_URL = Constants.expoConfig?.extra?.BACKEND_URL
+  
+  const onSubmit = handleSubmit(
+    async (data) => {
+      await registro(data)
+      router.push('/verifyEmail')
+    },
+    () => {
+      Toast.show({
+        type: 'error',
+        text1: 'Formulario incompleto',
+        text2: 'Revisa los campos obligatorios',
+        position: 'bottom'
+      })
+    }
+  )
+  const registro = async (data: FormData) => {
+    try {
+        
+      const url = `${BACKEND_URL}/api/registro` // 👇 Ojo con esto más abajo
+      const respuesta = await axios.post(url, data)
+
+      Toast.show({
+        type: 'success',
+        text1: respuesta.data.msg || 'Registro exitoso',
+        position: 'bottom'
+      })
+    } catch (error: any) {
+      const errorMsg = error?.response?.data?.msg || 'Error desconocido'
+      Toast.show({
+        type: 'error',
+        text1: errorMsg,
+        position: 'bottom'
+      })
+    }
+  }
   return (
     <>
     <Stack.Screen options={{headerTitle: '', headerLeft: ()=> (
@@ -28,15 +77,14 @@ const SignUpScreen = (props: Props) => {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>Crear una Cuenta</Text>
-        <InputFields placeholder='Nombre' placeholderTextColor={Colors.gray}/>
-        <InputFields placeholder='Apellido' placeholderTextColor={Colors.gray}/>
-        <InputFields placeholder='Direccion' placeholderTextColor={Colors.gray}/>
-        <InputFields placeholder='Celular' placeholderTextColor={Colors.gray}/>
-        <InputFields placeholder='Correo' placeholderTextColor={Colors.gray} autoCapitalize='none' keyboardType='email-address'/>
-        <InputFields placeholder='Contrasena' placeholderTextColor={Colors.gray} secureTextEntry={true}/>
-        <InputFields placeholder='Confirmar contrasena' placeholderTextColor={Colors.gray} secureTextEntry={true}/>
+        <InputFields label="Nombre" name="nombre" control={control} rules={{ required: 'El nombre es obligatorio' }} placeholder="Ingresa tu nombre"/>
+        <InputFields label="Apellido" name="apellido" control={control} rules={{ required: 'El apellido es obligatorio' }} placeholder="Ingresa tu apellido"/>
+        <InputFields label="Dirección" name="direccion" control={control} rules={{ required: 'La dirección es obligatoria' }} placeholder="Ingresa tu direccion"/>
+        <InputFields label="Celular" name="celular" control={control} rules={{ required: 'El celular es obligatorio' }} keyboardType="phone-pad" placeholder="Ingresa tu telefono"/>
+        <InputFields label="Correo" name="email" control={control} rules={{ required: 'El correo es obligatorio' }} keyboardType="email-address" placeholder="Ingresa tu correo"/>
+        <InputFields label="Contraseña" name="password" control={control} rules={{ required: 'La contraseña es obligatoria' }} secureTextEntry placeholder="Ingresa tu contraseña"/>
 
-        <TouchableOpacity style={styles.btn} onPress={() => router.push('/verifyEmail')}>
+        <TouchableOpacity style={styles.btn} onPress={onSubmit}>
           <Text style={styles.btnTxt}>Crear Cuenta</Text>
         </TouchableOpacity>
         <Text style={styles.loginTxt}>

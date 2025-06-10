@@ -10,7 +10,7 @@ const VerifyEmail = () => {
       <Stack.Screen options={{
         headerTitle: '',
         headerLeft: () => (
-          <TouchableOpacity onPress={() => router.replace('/signin')}>
+          <TouchableOpacity onPress={() => router.replace('/')}>
             <Ionicons name='close' size={24} color={Colors.black} />
           </TouchableOpacity>
         )
