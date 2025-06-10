@@ -48,17 +48,17 @@ const SignInScreen = (props: Props) => {
   }
 
   const onSubmit = handleSubmit(
-    (data) => {
-    console.log('Formulario válido:', data)
-    loginUser(data)
+    async (data) => {
+      loginUser(data)
+      router.push('/')
     },
     () => {
-    Toast.show({
-        type: 'error',
-        text1: 'Formulario incompleto',
-        text2: 'Revisa los campos obligatorios',
-        position: 'bottom'
-    })
+      Toast.show({
+          type: 'error',
+          text1: 'Formulario incompleto',
+          text2: 'Revisa los campos obligatorios',
+          position: 'bottom'
+      })
     }
   )
   return (

@@ -23,7 +23,7 @@ type FormData = {
 const SignUpScreen = (props: Props) => {
   const {control,handleSubmit,formState: { errors },} = useForm<FormData>()
   const BACKEND_URL = Constants.expoConfig?.extra?.BACKEND_URL
-  
+
   const onSubmit = handleSubmit(
     async (data) => {
       await registro(data)
@@ -41,7 +41,7 @@ const SignUpScreen = (props: Props) => {
   const registro = async (data: FormData) => {
     try {
         
-      const url = `${BACKEND_URL}/api/registro` // 👇 Ojo con esto más abajo
+      const url = "http://192.168.1.45:3000/api/registro" // 👇 Ojo con esto más abajo
       const respuesta = await axios.post(url, data)
 
       Toast.show({
