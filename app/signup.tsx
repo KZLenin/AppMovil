@@ -88,11 +88,9 @@ const SignUpScreen = (props: Props) => {
           <Text style={styles.btnTxt}>Crear Cuenta</Text>
         </TouchableOpacity>
         <Text style={styles.loginTxt}>
-          ¿Ya tienes una cuenta?{" "}
+          ¿Ya tienes una cuenta?{' '}
           <Link href={"/signin"} asChild>
-            <TouchableOpacity>
-              <Text style={styles.loginTxtSpan}>Ingresar</Text>
-            </TouchableOpacity>
+            <Text style={styles.loginTxtSpan}>Ingresar</Text>
           </Link>
         </Text>
         <View style={styles.divider}/>

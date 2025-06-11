@@ -2,7 +2,7 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react
 import React from "react";
 import { Link, Stack } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
@@ -25,9 +25,7 @@ const WelcomeScreen = (props: Props) => {
           <Animated.View entering={FadeInDown.delay(1100).duration(500)}>
           <Text style={styles.loginTxt}>¿Aún no tienes una cuenta? {" "}
             <Link href={"/signup"} asChild>
-              <TouchableOpacity>
-                <Text style={styles.loginTxtSpan}>Crear cuenta</Text>
-              </TouchableOpacity>
+              <Text style={styles.loginTxtSpan}>Crear cuenta</Text>
             </Link>
           </Text>
           </Animated.View>
