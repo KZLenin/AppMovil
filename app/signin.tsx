@@ -22,30 +22,46 @@ const SignInScreen = (props: Props) => {
   const BACKEND_URL = Constants.expoConfig?.extra?.BACKEND_URL
   const {fetchDataBackend} = useFetch()
 
-  const loginUser = async (data: FormData) => {
-    const url = `${BACKEND_URL}/login`
+const loginUser = async (data: FormData) => {
+  const roles = ['admin', 'clientes', 'vendedores'];
+  let isAuthenticated = false;
+
+  for (let role of roles) {
+    const url = `${BACKEND_URL}/${role}/login`;
+
     try {
-      const response = await fetchDataBackend(url, data, 'POST')
+      const response = await fetchDataBackend(url, data, 'POST');
+
       if (response?.success) {
-        router.push('/')
-      } else {
+        isAuthenticated = true;
+
         Toast.show({
-          type: 'error',
-          text1: 'Error de autenticación',
-          text2: response?.message || 'Credenciales incorrectas',
-          position: 'bottom'
-        })
+          type: 'success',
+          text1: 'Autenticación exitosa',
+          text2: `Usuario validado como ${role}`,
+          position: 'bottom',
+        });
+
+        router.push('/(tabs)');
+        break;
       }
+
     } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error del servidor',
-        text2: 'No se pudo conectar al backend',
-        position: 'bottom'
-      })
-      console.error('Login error:', error)
+      console.error(`Error al intentar login como ${role}:`, error);
+      // No mostramos toast aquí para no generar múltiples mensajes
     }
   }
+
+  if (!isAuthenticated) {
+    Toast.show({
+      type: 'error',
+      text1: 'Credenciales inválidas',
+      text2: 'No se encontró ningún usuario con esas credenciales',
+      position: 'bottom',
+    });
+  }
+};
+
 
   const onSubmit = handleSubmit(
     async (data) => {

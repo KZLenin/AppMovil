@@ -1,8 +1,9 @@
 // src/components/InputFields.tsx
 
-import { View, Text, TextInput, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
 import { Controller, Control } from 'react-hook-form'
+import { Ionicons } from '@expo/vector-icons' // Importa Ionicons para el icono ojo
 import { Colors } from '@/constants/Colors'
 
 type Props = {
@@ -21,11 +22,13 @@ const InputFields = ({
   name,
   control,
   rules = {},
-  secureTextEntry,
+  secureTextEntry = false,
   placeholder,
   keyboardType,
   autoCapitalize = 'none'
 }: Props) => {
+  const [showPassword, setShowPassword] = useState(false)
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -35,20 +38,32 @@ const InputFields = ({
         rules={rules}
         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
           <>
-            <TextInput
-              style={[
-                styles.inputField,
-                error && { borderColor: 'red' }
-              ]}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              placeholder={placeholder}
-              placeholderTextColor={Colors.gray}
-              secureTextEntry={secureTextEntry}
-              keyboardType={keyboardType}
-              autoCapitalize={autoCapitalize}
-            />
+            <View style={[styles.inputWrapper, error && { borderColor: 'red' }]}>
+              <TextInput
+                style={styles.inputField}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder={placeholder}
+                placeholderTextColor={Colors.gray}
+                secureTextEntry={secureTextEntry && !showPassword}
+                keyboardType={keyboardType}
+                autoCapitalize={autoCapitalize}
+              />
+              {secureTextEntry && (
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.iconButton}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={22}
+                    color={Colors.gray}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
             {error && <Text style={styles.error}>{error.message || 'Campo requerido'}</Text>}
           </>
         )}
@@ -70,15 +85,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500'
   },
-  inputField: {
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: Colors.white,
-    paddingVertical: 12,
-    paddingHorizontal: 19,
     borderRadius: 5,
-    fontSize: 16,
-    color: Colors.black,
     borderWidth: 1,
-    borderColor: Colors.gray
+    borderColor: Colors.gray,
+    paddingHorizontal: 10
+  },
+  inputField: {
+    flex: 1,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: Colors.black
+  },
+  iconButton: {
+    paddingHorizontal: 6
   },
   error: {
     color: 'red',
